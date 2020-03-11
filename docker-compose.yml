@@ -1,0 +1,37 @@
+version: '3'
+services:
+  proxy:
+    image: nginx:1.17.9
+    volumes:
+      - ./docker/nginx/proxy.conf:/etc/nginx/conf.d/default.conf
+      - ./file-manager/:/var/www/html
+    ports:
+    - 80:80
+    depends_on:
+      - qbittorrent
+      - fpm
+    restart: unless-stopped
+  # http://geekyplatypus.com/dockerise-your-php-application-with-nginx-and-php7-fpm/
+  # https://tinyfilemanager.github.io/
+  fpm:
+    image: php:7.4-fpm
+    volumes:
+    - ./file-manager/:/var/www/html
+    restart: unless-stopped
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - UMASK_SET=022
+      - WEBUI_PORT=8080
+    volumes:
+      - ./docker/qbt/qBittorrent.conf:/config/qBittorrent/qBittorrent.conf
+      - ./file-manager/downloads:/downloads
+#    ports:
+#      - 6881:6881
+#      - 6881:6881/udp
+#      - 8080:8080
+    restart: unless-stopped
