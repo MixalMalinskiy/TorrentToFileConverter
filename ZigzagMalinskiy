@@ -1,0 +1,41 @@
+class Solution {
+
+    /**
+     * @param String $s
+     * @param Integer $numRows
+     * @return String
+     */
+    function convert($s, $numRows) {
+        
+         $result = '';
+        
+		if($numRows==1)
+			return $s;
+        
+		for($i=0;$i<$numRows; $i++){
+			$row = array();
+			$newStr = '';
+			$getI = $i;
+			$AllRows = $numRows-1;
+			$rem = $i;
+		
+                while($getI < strlen($s)){
+                    
+					$newStr = $newStr.substr($s,$getI,1);
+					$tempRows = $AllRows - $rem;
+					$rem = $tempRows;
+                    
+					if($i==0 || $i== $AllRows)
+                    {
+						$tempRows= $AllRows;
+                    }
+					    $getI=$getI + ($tempRows*2);
+                    
+                }
+				
+			$result = $result.$newStr;
+		}
+        
+		return $result;
+    }
+}
